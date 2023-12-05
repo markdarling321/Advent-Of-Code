@@ -41,25 +41,29 @@
 #
 # Your puzzle answer was 56324.
 #
+###############################################################################################################################################################
 
+# OPEN FILE FOR READING
 inFile = open("input.txt","r")
+
+# INITIALIZE VARIABLES
 cLine = ''
 cTotal = 0
 
-# OPEN FILE FOR PROCESSING
+# BEGIN FILE PROCESSING
 with open("input.txt") as file:
 	
-	# READ LINE
+	# READ EACH LINE AND PROCESS SEQUENTIALLY
 	for line in file:
-		print(line.rstrip())
+		print(line.rstrip()) # PRINT TO TERMINAL FOR REFERENCE
 
-		# PROCESS LINE CHARACTER BY CHARACTER
+		# PROCESS EACH LINE CHARACTER BY CHARACTER
 		for char in line:
 			if (char.isnumeric()):									# WE ONLY CARE ABOUT NUMERIC CHARACTERS
 				print("NUMERIC CHARACTER FOUND: ", char)
 				cLine += char										# ADD CHARACTER TO CALIBRATION LINE
 				print("cLine: ", cLine)
-			# END OF LINE CHARACTER ANALYSIS AND TEMPORARY STRING BUILD
+			# END OF LINE CHARACTER ANALYSIS AND TEMPORARY cLine STRING BUILDING
 		
 		# PROCESS TEMPORARY STRING TO DETERMINE CALIBRATION VALUE
 		if len(cLine) == 1:											# DUPLICATE SINGLE NUMERIC CHARACTER FOR ADDITION OF CALIBRATION VALUE TO TOTAL CALIBRATION SUM
@@ -69,11 +73,11 @@ with open("input.txt") as file:
 			print("LENGTH > 1: ")
 			cTotal += int(cLine[0] + cLine[-1])						# USE FIRST AND LAST NUMERIC CHARACTERS IN TEMPORARY STRING TO DETERMINE CALIBRATION VALUE TO BE ADDED TO TOTAL CALIBRATION SUM
 		
-		# RESET TEMPORARY STRING FOR NEXT LINE
+		# RESET TEMPORARY STRING FOR NEXT LINE TO BE PROCESSED
 		cLine = ''
 
 	# PRINT FINAL CALIBRATION VALUE
 	print(cTotal)
 
-# CLOSE FILE OBJECT
+# CLOSE FILE
 inFile.close()

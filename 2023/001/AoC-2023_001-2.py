@@ -41,20 +41,33 @@
 #
 # Your puzzle answer was 56324.
 #
+###############################################################################################################################################################
 
+# OPEN FILE FOR READING
 inFile = open("input.txt","r")
+
+# INITIALIZE VARIABLES
 cLine = ''
 cTotal = 0
 index = 0
 
-# OPEN FILE FOR PROCESSING
+# BEGIN FILE PROCESSING
 with open("input.txt") as file:
+    
+    # PROCESS EACH LINE
     for line in file:
-        print(line.rstrip())
-        index = 0
+        print(line.rstrip())    # PRINT FOR REFERENCE
+        index = 0               # ZERO INDEX FOR CHARACTER BY CHARACTER ANALYSIS OF EACH LINE
+        cLine = ""              # CLEAR TEMP STRING BEFORE PROCESSING NEXT LINE
+        
+        # PROCESS EACH CHARACTER IN LINE
         for char in line:
+
+            # ADD ALL NUMERIC CHARS TO TEMP STRING AUTOMATICALLY
             if char.isnumeric():
                 cLine += char
+            
+            # IF NOT NUMERIC, MUST DETERMINE IF SUBSEQUENT ALPHA CHARACTERS COMPOSE A SPELLED NUMBER
             else:
                 if line.find("zero", index, index + 4) != -1:
                     cLine += "0"
@@ -76,7 +89,11 @@ with open("input.txt") as file:
                     cLine += "8"
                 elif line.find("nine", index, index + 4) != -1:
                     cLine += "9"
+            
+            # INCREMENT INDEX FOR PROCESSING NEXT CHARACTER IN LINE
             index += 1
+        
+        # ONCE TEMP STRING IS BUILT IN FULL, DETERMINE CORRECT CALIBRATION VALUE OF LINE'S CONTENTS
         print("UNFILTERED cLine: ", cLine)
         if len(cLine) == 1:
             cLine = int(cLine) * 11
@@ -84,9 +101,11 @@ with open("input.txt") as file:
             cLine = cLine[0] + cLine[-1]
         print("FINAL cLine: ", cLine)
 
+        # MAINTAIN CALIBRATION VALUE TOTAL WHILE CONTINUING TO PROCESS FILE
         cTotal += int(cLine)
-        cLine = ""
 
+# DISPLAY FINAL CALIBRATION VALUE ONCE
 print("cTotal: ", cTotal)
-# CLOSE FILE OBJECT
+
+# CLOSE FILE
 inFile.close()
