@@ -50,3 +50,103 @@
 #	
 ################################################################################
 
+# OPEN FILE FOR READING
+inFile = open("input.txt","r")
+
+# VARIABLES
+RED = 12
+GREEN = 13
+BLUE = 14
+redCubes = ''
+greenCubes = ''
+blueCubes = ''
+possibleGames = ''
+sumOfIDs = 0
+roundPossible = True
+
+# BEGIN FILE PROCESSING
+with open("input.txt") as file:
+
+	# PROCESS EACH LINE
+	for line in file:
+		line = line.rstrip()
+		print("PRINT:\t", line)    # PRINT FOR REFERENCE
+
+		# SPLIT LINE ON : TO GET GAME ID AND SEPARATE ROUNDS FROM ID
+		gameID = line.split(":")
+		gameID = gameID[0].split(" ")
+		gameID = gameID[1]
+		print("GAME ID: ", gameID)
+
+		# SPLIT LINE ON ; FOR INDIVIDUAL ROUNDS
+		rounds = line.split(":")
+		rounds = rounds[1].replace(" ","").split(";")
+		print("ROUNDS: ", rounds)
+		print()
+
+		# ENUMERATE INDIVIDUAL DRAWS AND DETERMINE CUBE COUNTS PER DRAW
+		for draws in rounds:
+			# RESET VARIABLES
+			redCubes = ''
+			blueCubes = ''
+			greenCubes = ''
+
+			draw = draws.split(",")
+			print("DRAW: ", draw)		# PRINT FOR REFERENCE
+			
+			for cube in draw:
+				if cube.find("red") != -1:
+					for char in cube:
+						if char.isnumeric():
+							redCubes += char
+					
+				elif cube.find("green") != -1:
+					for char in cube:
+						if char.isnumeric():
+							greenCubes += char
+					
+				elif cube.find("blue") != -1:
+					for char in cube:
+						if char.isnumeric():
+							blueCubes += char
+
+			# QUICK FIX FOR DRAWS WITHOUT A COLOR SELECTED			
+			if redCubes == '':
+				redCubes = 0
+			if greenCubes == '':
+				greenCubes = 0
+			if blueCubes == '':
+				blueCubes = 0
+
+			# PRINT FOR REFERENCE
+			print("RED CUBES: ", redCubes)
+			print("GREEN CUBES: ", greenCubes)
+			print("BLUE CUBES: ", blueCubes)
+
+			# DETERMINE WHETHER ROUND WAS POSSIBLE BASED ON ACTUAL CUBE COUNTS
+			if ( (int(redCubes) <= RED) and (int(blueCubes) <= BLUE) and (int(greenCubes) <= GREEN) ):
+				print("POSSIBLE: TRUE")
+			else:
+				print("POSSIBLE: FALSE")
+				roundPossible = False
+			print()	
+		if roundPossible == True:
+			possibleGames += gameID + ','
+		else:
+			roundPossible = True
+		print("POSSIBLE GAME IDs: ", possibleGames)
+		print()
+
+	# REMOVE DUPLICATES FROM LIST
+	possibleGamesList = possibleGames.split(",")
+	possibleGamesList = list(dict.fromkeys(possibleGamesList))
+	possibleGamesList.pop(-1) # REMOVE EMPTY INDEX AT END OF LIST
+	print("FINAL POSSIBLE GAME IDs: ", possibleGamesList)
+
+	for item in possibleGamesList:
+		sumOfIDs += int(item)
+	
+	print("SUM OF VALID GAME IDs: ", sumOfIDs)
+
+# CLOSE FILE
+inFile.close()
