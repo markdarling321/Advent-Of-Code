@@ -43,10 +43,21 @@
 #	
 ################################################################################
 
+# VARIABLES
+schematic = []
+
 # OPEN FILE FOR READING
 inFile = open("input.txt","r")
 
+# READ ENTIRE FILE INTO LIST RESIDING IN MEMORY
+schematic = inFile.readlines()
 
+# STRIP NEWLINES FROM LIST OF INPUT TAKEN AND UPDATE VARIABLE IN PLACE
+for index, line in enumerate(schematic):
+	schematic[index] = line.rstrip()
+
+# PRINT FOR REFERENCE
+print(schematic)
 
 # CLOSE FILE
 inFile.close()
