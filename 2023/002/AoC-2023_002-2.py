@@ -80,6 +80,8 @@
 #	
 #	For each game, find the minimum set of cubes that must have been present. What 
 # 	is the sum of the power of these sets?
+#	
+#	Your puzzle answer was 67363.
 #
 ################################################################################
 
@@ -87,15 +89,17 @@
 inFile = open("input.txt","r")
 
 # VARIABLES
-RED = 12
-GREEN = 13
-BLUE = 14
 redCubes = ''
 greenCubes = ''
 blueCubes = ''
-possibleGames = ''
-sumOfIDs = 0
-roundPossible = True
+powerOfGame = 0
+sumOfPower = 0
+lowestRed = '-1'
+lowestGreen = '-1'
+lowestBlue = '-1'
+localMaxRed = '-1'
+localMaxGreen = '-1'
+localMaxBlue = '-1'
 
 # BEGIN FILE PROCESSING
 with open("input.txt") as file:
@@ -103,7 +107,7 @@ with open("input.txt") as file:
 	# PROCESS EACH LINE
 	for line in file:
 		line = line.rstrip()
-		print("PRINT:\t", line)    # PRINT FOR REFERENCE
+		print("\n\nPRINT:\t", line)    # PRINT FOR REFERENCE
 
 		# SPLIT LINE ON : TO GET GAME ID AND SEPARATE ROUNDS FROM ID
 		gameID = line.split(":")
@@ -116,6 +120,11 @@ with open("input.txt") as file:
 		rounds = rounds[1].replace(" ","").split(";")
 		print("ROUNDS: ", rounds)
 		print()
+		
+		# RESET VARIABLES
+		lowestRed = '-1'
+		lowestGreen = '-1'
+		lowestBlue = '-1'
 
 		# ENUMERATE INDIVIDUAL DRAWS AND DETERMINE CUBE COUNTS PER DRAW
 		for draws in rounds:
@@ -123,25 +132,29 @@ with open("input.txt") as file:
 			redCubes = ''
 			blueCubes = ''
 			greenCubes = ''
-
-			draw = draws.split(",")
-			print("DRAW: ", draw)		# PRINT FOR REFERENCE
+			localMaxRed = '-1'
+			localMaxGreen = '-1'
+			localMaxBlue = '-1'
 			
-			for cube in draw:
+			draw = draws.split(",")		# CREATE LIST OF STRINGS CONTAINING INDIVIDUAL PICKS CONTAINING CUBE COUNT AND COLOR
+			print("DRAW: ", draw)		# PRINT FOR REFERENCE
+
+			# EXTRACT CUBE COUNTS FROM DATA
+			for cube in draw:	# NOT EVERY DRAW PICKS ALL 3 COLORS EVERY TIME
 				if cube.find("red") != -1:
 					for char in cube:
 						if char.isnumeric():
-							redCubes += char
+							redCubes += char	# BUILD CUBE COUNT AS STRING
 					
 				elif cube.find("green") != -1:
 					for char in cube:
 						if char.isnumeric():
-							greenCubes += char
+							greenCubes += char	# BUILD CUBE COUNT AS STRING
 					
 				elif cube.find("blue") != -1:
 					for char in cube:
 						if char.isnumeric():
-							blueCubes += char
+							blueCubes += char	# BUILD CUBE COUNT AS STRING
 
 			# QUICK FIX FOR DRAWS WITHOUT A COLOR SELECTED			
 			if redCubes == '':
@@ -155,31 +168,39 @@ with open("input.txt") as file:
 			print("RED CUBES: ", redCubes)
 			print("GREEN CUBES: ", greenCubes)
 			print("BLUE CUBES: ", blueCubes)
+			print()
 
-			# DETERMINE WHETHER ROUND WAS POSSIBLE BASED ON ACTUAL CUBE COUNTS
-			if ( (int(redCubes) <= RED) and (int(blueCubes) <= BLUE) and (int(greenCubes) <= GREEN) ):
-				print("POSSIBLE: TRUE")
-			else:
-				print("POSSIBLE: FALSE")
-				roundPossible = False
-			print()	
-		if roundPossible == True:
-			possibleGames += gameID + ','
-		else:
-			roundPossible = True
-		print("POSSIBLE GAME IDs: ", possibleGames)
-		print()
+			# DETERMINE MINIMUM NUMBER OF CUBES FOR CURRENT DRAW
+			if int(redCubes) > int(localMaxRed):
+				localMaxRed = redCubes
+				if int(localMaxRed) > int(lowestRed):
+					lowestRed = redCubes
+			if int(greenCubes) > int(localMaxGreen):
+				localMaxGreen = greenCubes
+				if int(localMaxGreen) > int(lowestGreen):
+					lowestGreen = greenCubes
+			if int(blueCubes) > int(localMaxBlue):
+				localMaxBlue = blueCubes
+				if int(localMaxBlue) > int(lowestBlue):
+					lowestBlue = blueCubes
 
-	# REMOVE DUPLICATES FROM LIST
-	possibleGamesList = possibleGames.split(",")
-	possibleGamesList = list(dict.fromkeys(possibleGamesList))
-	possibleGamesList.pop(-1) # REMOVE EMPTY INDEX AT END OF LIST
-	print("FINAL POSSIBLE GAME IDs: ", possibleGamesList)
-
-	for item in possibleGamesList:
-		sumOfIDs += int(item)
+			# PRINT FOR REFERENCE
+			print("RED LOCAL MAX: ", localMaxRed)
+			print("LOWEST RED: ", lowestRed)
+			print()
+			print("GREEN LOCAL MAX: ", localMaxGreen)
+			print("LOWEST GREEN: ", lowestGreen)
+			print()
+			print("BLUE LOCAL MAX: ", localMaxBlue)
+			print("LOWEST BLUE: ", lowestBlue)
+			print()
+		
+		# DETERMINE POWER OF GAME
+		powerOfGame = int(lowestRed) * int(lowestGreen) * int(lowestBlue)
+		sumOfPower += powerOfGame
 	
-	print("SUM OF VALID GAME IDs: ", sumOfIDs)
+	# DISPLAY FINAL RESULT
+	print("SUM OF POWER: ", sumOfPower)
 
 # CLOSE FILE
 inFile.close()
